@@ -1,58 +1,95 @@
-# 🎫 Customer Support Ticket Priority Prediction
+# Customer Support Ticket Prediction & Routing System
 
-An AI/ML-based application that automatically predicts the **priority of customer support tickets** based on the ticket description.
+An AI-powered Customer Support Ticket Prediction and Routing System that automatically predicts ticket priority, estimates resolution time, routes tickets to the appropriate department, and provides batch-level ticket analysis.
 
-The project uses **Natural Language Processing (NLP)**, **TF-IDF Vectorization**, and **Logistic Regression** to classify customer support requests. A **Streamlit web application** provides an interactive interface where users can enter a ticket description and receive a predicted priority.
+## Author
 
----
+**Dhruv Yadav**
 
-## 📌 Project Overview
+## Project Overview
 
-Customer support teams receive many tickets every day. Manually identifying which tickets require immediate attention can be time-consuming.
+Customer support teams receive a large number of tickets through different channels. Manually determining the priority and routing every ticket can be time-consuming and inconsistent.
 
-This project helps automate ticket prioritization by analyzing the text of a customer support ticket and predicting its priority using a trained Machine Learning model.
+This project uses machine learning to automate the initial ticket-triage process.
 
-### Example
+The system can:
 
-**Ticket Description**
+- Predict ticket priority
+- Classify tickets into priority levels
+- Estimate an expected resolution-time range
+- Route tickets to the appropriate department
+- Process individual tickets
+- Process multiple tickets through CSV files
+- Analyze batches of support tickets
+- Display current tickets assigned to each department
+- Export batch predictions as CSV
+- Provide an included sample CSV for demonstration
+
+## AI / Machine Learning
+
+The priority prediction component uses an **XGBoost classifier**.
+
+The model uses a combination of:
+
+- Ticket subject TF-IDF features
+- Ticket description TF-IDF features
+- Issue category
+- Ticket channel
+- Additional text-based numerical features
+
+The predicted priority levels are:
+
+- Critical
+- High
+- Medium
+- Low
+
+## Ticket Routing
+
+After predicting the priority, the ticket is routed according to its issue category.
+
+| Issue Category | Department |
+|---|---|
+| Technical | Technical Support |
+| Billing | Billing |
+| Fraud | Fraud & Risk |
+| Account | Account Support |
+| General Inquiry | General Support |
+
+Each department maintains its own ticket queue.
+
+## Batch Prediction
+
+The application supports CSV-based batch processing.
+
+Users can either:
+
+1. Upload their own CSV file
+2. Click **Use Sample CSV** to process the included demonstration dataset
+
+The batch analysis displays:
+
+- Total tickets
+- Number of departments
+- Critical ticket count
+- Priority distribution
+- Department distribution
+- Priority by department
+- Complete prediction results
+
+The resulting predictions can also be downloaded as a CSV file.
+
+## Sample Dataset
+
+A sample CSV is included for demonstration:
 
 ```text
-I am unable to access my account because the password reset link is not working.
-I have tried several times but keep getting an error.
+sample_data/sample_tickets.csv
 ```
 
-The trained model processes the description and predicts the appropriate ticket priority.
+This allows the application to be tested without preparing a CSV manually.
 
----
-
-## ✨ Features
-
-- Customer support ticket priority prediction
-- Natural Language Processing
-- TF-IDF text vectorization
-- Logistic Regression classification
-- Interactive Streamlit user interface
-- Single ticket prediction
-- Pre-trained ML model support
-- Re-trainable machine learning pipeline
-- Organized source code and model files
-
----
-
-## 🛠️ Technologies Used
-
-- Python
-- Pandas
-- Scikit-learn
-- TF-IDF Vectorizer
-- Logistic Regression
-- Streamlit
-- KaggleHub
-- Jupyter Notebook
-
----
-
-## 📂 Project Structure
+## Project Structure
 
 ```text
 Customer-Support-Ticket-Priority/
@@ -62,388 +99,136 @@ Customer-Support-Ticket-Priority/
 │       └── customer_support_tickets.csv
 │
 ├── models/
-│   ├── label_mapping.pkl
-│   ├── logistic_regression_model.pkl
-│   └── tfidf_vectorizer.pkl
+│   ├── priority_xgboost_model.pkl
+│   ├── priority_subject_tfidf.pkl
+│   ├── priority_description_tfidf.pkl
+│   ├── priority_category_encoder.pkl
+│   ├── priority_channel_encoder.pkl
+│   ├── priority_label_mapping.pkl
+│   └── resolution_model.pkl
 │
-├── Notebooks/
-│   └── datacollection.ipynb
+├── sample_data/
+│   └── sample_tickets.csv
 │
 ├── src/
 │   ├── datacollection.py
 │   ├── preprocessing.py
 │   ├── train.py
+│   ├── train_xgboost.py
+│   ├── train_catboost.py
+│   ├── train_resolution.py
+│   ├── train_resolution_v2.py
+│   ├── resolution_range.py
 │   └── predict.py
 │
-├── .gitignore
 ├── requirements.txt
+├── run.bat
 └── README.md
 ```
 
-> Generated processed datasets are not stored in GitHub because some TF-IDF files are very large. They can be recreated by running the preprocessing pipeline.
-
----
-
-# 🚀 Getting Started
-
-## 1. Clone the Repository
-
-Open Terminal, PowerShell, Command Prompt, or the VS Code terminal.
-
-```bash
-git clone https://github.com/Please-use-me/Customer-Support-Ticket-Priority.git
-```
-
-Move into the project folder:
-
-```bash
-cd Customer-Support-Ticket-Priority
-```
-
----
-
-## 2. Create a Virtual Environment
-
-### macOS / Linux
-
-```bash
-python3 -m venv venv
-```
-
-Activate it:
-
-```bash
-source venv/bin/activate
-```
+## Running the Application
 
 ### Windows
 
-Create the environment:
-
-```bash
-python -m venv venv
-```
-
-Activate it:
+Activate the virtual environment:
 
 ```bash
 venv\Scripts\activate
 ```
 
----
-
-## 3. Install Required Packages
-
-Upgrade pip:
-
-```bash
-python -m pip install --upgrade pip
-```
-
-Install all project dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-The main dependencies include:
-
-```text
-kagglehub
-pandas
-scikit-learn
-streamlit
-```
-
----
-
-# ▶️ Run the Application
-
-If the trained model files are already available inside the `models/` folder, you do **not** need to train the model again.
-
-Start the Streamlit application with:
-
-```bash
-streamlit run src/predict.py
-```
-
-After starting the application, Streamlit will display a local URL similar to:
-
-```text
-http://localhost:8501
-```
-
-Open the URL in your browser.
-
----
-
-## 🖥️ Using the Application
-
-1. Start the Streamlit application.
-2. Open the displayed localhost URL.
-3. Select **Single Ticket Prediction**.
-4. Enter a customer support problem in the **Ticket Description** field.
-5. Click **Predict**.
-6. The ML model will predict the ticket priority.
-
-### Example Input
-
-```text
-My payment was deducted twice for the same transaction and I have not received a refund.
-Please resolve this issue as soon as possible.
-```
-
----
-
-# 🧠 Run the Complete ML Pipeline
-
-If you want to rebuild the project from the beginning instead of using the existing trained model, follow these steps.
-
-## Step 1 — Data Collection
-
-```bash
-python src/datacollection.py
-```
-
-This step collects/downloads the dataset required for the project.
-
----
-
-## Step 2 — Data Preprocessing
-
-```bash
-python src/preprocessing.py
-```
-
-The preprocessing stage prepares the ticket text for Machine Learning.
-
-Typical operations include:
-
-- Data cleaning
-- Handling ticket text
-- Label processing
-- Train/test splitting
-- TF-IDF vectorization
-
-Processed files are generated locally and are not committed to GitHub because of their large size.
-
----
-
-## Step 3 — Train the Model
-
-```bash
-python src/train.py
-```
-
-The training process creates the Machine Learning model and saves the required files inside:
-
-```text
-models/
-```
-
-The important model files are:
-
-```text
-logistic_regression_model.pkl
-tfidf_vectorizer.pkl
-label_mapping.pkl
-```
-
----
-
-## Step 4 — Run the Prediction Application
-
-After training is complete:
-
-```bash
-streamlit run src/predict.py
-```
-
----
-
-# 🔄 Complete Setup Commands
-
-For macOS/Linux, the complete setup is:
-
-```bash
-git clone https://github.com/Please-use-me/Customer-Support-Ticket-Priority.git
-
-cd Customer-Support-Ticket-Priority
-
-python3 -m venv venv
-
-source venv/bin/activate
-
-pip install -r requirements.txt
-
-streamlit run src/predict.py
-```
-
-If you want to retrain the model:
-
-```bash
-python src/datacollection.py
-
-python src/preprocessing.py
-
-python src/train.py
-
-streamlit run src/predict.py
-```
-
----
-
-# 📊 Machine Learning Workflow
-
-```text
-Customer Support Dataset
-          │
-          ▼
-     Data Cleaning
-          │
-          ▼
-   Text Preprocessing
-          │
-          ▼
-  TF-IDF Vectorization
-          │
-          ▼
-  Train / Test Dataset
-          │
-          ▼
- Logistic Regression
-          │
-          ▼
-      Trained Model
-          │
-          ▼
-   Streamlit Web App
-          │
-          ▼
-Ticket Priority Prediction
-```
-
----
-
-# 📦 Model Files
-
-The application uses the following trained files:
-
-| File | Purpose |
-|---|---|
-| `logistic_regression_model.pkl` | Trained classification model |
-| `tfidf_vectorizer.pkl` | Converts ticket text into numerical features |
-| `label_mapping.pkl` | Maps model output to ticket priority labels |
-
----
-
-# ⚠️ Large Processed Files
-
-TF-IDF transformed datasets can become very large.
-
-For this reason, generated files such as:
-
-```text
-x_train_tfidf.csv
-x_test_tfidf.csv
-```
-
-are excluded from GitHub.
-
-They can be regenerated locally by running:
-
-```bash
-python src/preprocessing.py
-```
-
-This keeps the GitHub repository lightweight and easier to clone.
-
----
-
-# ❓ Troubleshooting
-
-## `streamlit: command not found`
-
-Run:
-
-```bash
-pip install streamlit
-```
-
-or:
+Start the application:
 
 ```bash
 python -m streamlit run src/predict.py
 ```
 
----
+Alternatively, double-click:
 
-## `ModuleNotFoundError`
-
-Make sure the virtual environment is activated and run:
-
-```bash
-pip install -r requirements.txt
+```text
+run.bat
 ```
 
----
+## Application Workflow
 
-## Model File Not Found
-
-If files inside the `models/` directory are missing, rebuild them:
-
-```bash
-python src/preprocessing.py
-python src/train.py
+```text
+Support Ticket
+      |
+      v
+Text & Ticket Features
+      |
+      v
+TF-IDF + Encoded Features
+      |
+      v
+XGBoost Priority Classifier
+      |
+      +-- Critical
+      +-- High
+      +-- Medium
+      +-- Low
+      |
+      v
+Department Routing
+      |
+      +-- Technical Support
+      +-- Billing
+      +-- Fraud & Risk
+      +-- Account Support
+      +-- General Support
+      |
+      v
+Department Queue
 ```
 
-Then run:
+## Technologies Used
 
-```bash
-streamlit run src/predict.py
-```
+- Python
+- Pandas
+- NumPy
+- Scikit-learn
+- XGBoost
+- Joblib
+- SciPy
+- Streamlit
+- TF-IDF
+- Machine Learning Classification
 
----
+## Main Features
 
-## Check Installed Packages
+### Single Ticket Prediction
 
-```bash
-pip list
-```
+Enter:
 
----
+- Ticket subject
+- Ticket description
+- Issue category
+- Ticket channel
 
-# 🔮 Future Improvements
+The system predicts the ticket priority and displays the expected resolution range.
 
-Possible improvements include:
+### Ticket Routing
 
-- Deep Learning based ticket classification
-- BERT / Transformer models
-- Automatic ticket routing
-- Sentiment analysis
-- Ticket category prediction
-- Confidence scores
-- REST API integration
-- Database integration
-- Cloud deployment
-- Real-time customer support dashboards
+A predicted ticket can be routed to its appropriate department and stored in that department's queue.
 
----
+### Department Queues
 
-# 👨‍💻 Author
+The application displays the current tickets in each department, including queue sequence numbers.
 
-**Suyash Biranje**
+### Batch Processing
 
-GitHub: [Please-use-me](https://github.com/Please-use-me)
+Multiple tickets can be processed at once using a CSV file.
 
----
+### Batch Analysis
 
-## ⭐ Support
+The application provides visual and tabular analysis of the processed tickets.
 
-If you found this project useful, consider giving the repository a ⭐ on GitHub.
+## Author
 
----
+**Dhruv Yadav**
 
-## 📄 License
+GitHub:  
+https://github.com/DhruvYadav3007
 
-This project is intended for educational and Machine Learning demonstration purposes.
+## Disclaimer
+
+This project is developed as a machine-learning/software engineering project for customer-support ticket triage and routing. Predictions are model-generated and should be reviewed by human support personnel before being used for operational decisions.
