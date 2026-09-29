@@ -1,0 +1,13 @@
+Ticket_Subject,Ticket_Description,Issue_Category,Ticket_Channel
+Unable to login,I cannot log into my account and I urgently need access.,Account,Web Form
+Payment failed,My payment failed several times and the money may have been deducted.,Billing,Email
+Application error,The application keeps showing an error and is not working.,Technical,Chat
+Suspicious transaction,I see a transaction that I did not make and I need immediate help.,Fraud,Web Form
+Update account details,I want to update my account information.,Account,Email
+Refund status,Please tell me when I will receive my refund.,Billing,Chat
+Website not loading,The website is not loading properly and I cannot use the service.,Technical,Web Form
+Unknown charge,There is an unknown charge on my account that I do not recognize.,Fraud,Email
+General question,I would like some information about the available services.,General Inquiry,Chat
+Password reset,I forgot my password and cannot access my account.,Account,Web Form
+Charged twice,I was charged twice for the same purchase and need a correction.,Billing,Email
+System crash,The system crashed while I was using the application and I cannot continue.,Technical,Chat

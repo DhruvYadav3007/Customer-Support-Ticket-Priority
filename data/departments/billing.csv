@@ -1,0 +1,12 @@
+Ticket_ID,Ticket_Subject,Ticket_Description,Issue_Category,Priority,Expected_Resolution,Ticket_Channel,Routed_Department,Routed_At
+TKT-E69BFA6E,Payment failed,My payment failed several times and the money may have been deducted.,Billing,Low,14–69 hours,Email,Billing,2026-09-29 00:25:20
+TKT-01B10DF9,Refund status,Please tell me when I will receive my refund.,Billing,Low,14–69 hours,Chat,Billing,2026-09-29 00:25:20
+TKT-BE20ED1A,Charged twice,I was charged twice for the same purchase and need a correction.,Billing,Low,14–69 hours,Email,Billing,2026-09-29 00:25:20
+TKT-C1DE8BD8,Payment failed,My payment failed several times and the money may have been deducted.,Billing,Low,14–69 hours,Email,Billing,2026-09-29 00:30:35
+TKT-3A97D55E,Refund status,Please tell me when I will receive my refund.,Billing,Low,14–69 hours,Chat,Billing,2026-09-29 00:30:35
+TKT-46A207DB,Charged twice,I was charged twice for the same purchase and need a correction.,Billing,Low,14–69 hours,Email,Billing,2026-09-29 00:30:35
+TKT-21C156D3,,Customers are unable to complete payments and receive an error during checkout.,Billing,Low,14–69 hours,Web Form,Billing,2026-09-29 06:24:54
+TKT-C7AC75F8,,The payment was deducted from my account but the order still shows as unpaid.,Billing,Low,14–69 hours,Web Form,Billing,2026-09-29 06:24:54
+TKT-651DA647,Payment failed,My payment failed several times and the money may have been deducted.,Billing,Low,14–69 hours,Email,Billing,2026-09-29 06:26:41
+TKT-ACD7625C,Refund status,Please tell me when I will receive my refund.,Billing,Low,14–69 hours,Chat,Billing,2026-09-29 06:26:41
+TKT-1EF50861,Charged twice,I was charged twice for the same purchase and need a correction.,Billing,Low,14–69 hours,Email,Billing,2026-09-29 06:26:41

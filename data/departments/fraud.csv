@@ -1,0 +1,9 @@
+Ticket_ID,Ticket_Subject,Ticket_Description,Issue_Category,Priority,Expected_Resolution,Ticket_Channel,Routed_Department,Routed_At
+TKT-E50D677F,Suspicious transaction,I see a transaction that I did not make and I need immediate help.,Fraud,High,8–34.2 hours,Web Form,Fraud & Risk,2026-09-29 00:25:20
+TKT-BF8E8809,Unknown charge,There is an unknown charge on my account that I do not recognize.,Fraud,Critical,4–16 hours,Email,Fraud & Risk,2026-09-29 00:25:20
+TKT-4AA3BE9C,Suspicious transaction,I see a transaction that I did not make and I need immediate help.,Fraud,High,8–34.2 hours,Web Form,Fraud & Risk,2026-09-29 00:30:35
+TKT-A12F2A11,Unknown charge,There is an unknown charge on my account that I do not recognize.,Fraud,Critical,4–16 hours,Email,Fraud & Risk,2026-09-29 00:30:35
+TKT-11DC8A70,,I noticed a transaction on my account that I did not authorize.,Fraud,Critical,4–16 hours,Web Form,Fraud & Risk,2026-09-29 06:24:54
+TKT-675FD98B,,Someone appears to have accessed my account without permission.,Fraud,Critical,4–16 hours,Web Form,Fraud & Risk,2026-09-29 06:24:54
+TKT-D8D67FE9,Suspicious transaction,I see a transaction that I did not make and I need immediate help.,Fraud,High,8–34.2 hours,Web Form,Fraud & Risk,2026-09-29 06:26:41
+TKT-5F330818,Unknown charge,There is an unknown charge on my account that I do not recognize.,Fraud,Critical,4–16 hours,Email,Fraud & Risk,2026-09-29 06:26:41
