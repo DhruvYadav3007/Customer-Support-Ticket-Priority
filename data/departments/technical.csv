@@ -1,0 +1,12 @@
+Ticket_ID,Ticket_Subject,Ticket_Description,Issue_Category,Priority,Expected_Resolution,Ticket_Channel,Routed_Department,Routed_At
+TKT-04E2DF80,Application error,The application keeps showing an error and is not working.,Technical,Medium,15–66 hours,Chat,Technical Support,2026-09-29 00:25:20
+TKT-BC36E94B,Website not loading,The website is not loading properly and I cannot use the service.,Technical,Medium,15–66 hours,Web Form,Technical Support,2026-09-29 00:25:20
+TKT-25E4B605,System crash,The system crashed while I was using the application and I cannot continue.,Technical,Medium,15–66 hours,Chat,Technical Support,2026-09-29 00:25:20
+TKT-20E7C530,Application error,The application keeps showing an error and is not working.,Technical,Medium,15–66 hours,Chat,Technical Support,2026-09-29 00:30:35
+TKT-870ADDC0,Website not loading,The website is not loading properly and I cannot use the service.,Technical,Medium,15–66 hours,Web Form,Technical Support,2026-09-29 00:30:35
+TKT-44F32795,System crash,The system crashed while I was using the application and I cannot continue.,Technical,Medium,15–66 hours,Chat,Technical Support,2026-09-29 00:30:35
+TKT-DDC04698,,The mobile application crashes whenever I try to open my account settings.,Technical,Medium,15–66 hours,Web Form,Technical Support,2026-09-29 06:24:54
+TKT-AD4250F1,,The website returns a server error when I try to upload a document.,Technical,Medium,15–66 hours,Web Form,Technical Support,2026-09-29 06:24:54
+TKT-11FB53C7,Application error,The application keeps showing an error and is not working.,Technical,Medium,15–66 hours,Chat,Technical Support,2026-09-29 06:26:41
+TKT-B46B91DF,Website not loading,The website is not loading properly and I cannot use the service.,Technical,Medium,15–66 hours,Web Form,Technical Support,2026-09-29 06:26:41
+TKT-789EF3AB,System crash,The system crashed while I was using the application and I cannot continue.,Technical,Medium,15–66 hours,Chat,Technical Support,2026-09-29 06:26:41

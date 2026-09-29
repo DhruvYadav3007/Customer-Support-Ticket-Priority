@@ -1,0 +1,11 @@
+Ticket_ID,Ticket_Subject,Ticket_Description,Issue_Category,Priority,Expected_Resolution,Ticket_Channel,Routed_Department,Routed_At
+TKT-6EC0E3AC,Unable to login,I cannot log into my account and I urgently need access.,Account,Low,15–68 hours,Web Form,Account Support,2026-09-29 00:25:20
+TKT-D00D1682,Update account details,I want to update my account information.,Account,Low,15–68 hours,Email,Account Support,2026-09-29 00:25:20
+TKT-0F5E7B52,Password reset,I forgot my password and cannot access my account.,Account,Low,15–68 hours,Web Form,Account Support,2026-09-29 00:25:20
+TKT-2402FECB,Unable to login,I cannot log into my account and I urgently need access.,Account,Low,15–68 hours,Web Form,Account Support,2026-09-29 00:30:35
+TKT-082CEC07,Update account details,I want to update my account information.,Account,Low,15–68 hours,Email,Account Support,2026-09-29 00:30:35
+TKT-CA77E416,Password reset,I forgot my password and cannot access my account.,Account,Low,15–68 hours,Web Form,Account Support,2026-09-29 00:30:35
+TKT-5121C8C4,,I cannot log in because my account password reset link is not working.,Account,Low,15–68 hours,Web Form,Account Support,2026-09-29 06:24:54
+TKT-9ECCB9CA,Unable to login,I cannot log into my account and I urgently need access.,Account,Low,15–68 hours,Web Form,Account Support,2026-09-29 06:26:41
+TKT-F18F3C81,Update account details,I want to update my account information.,Account,Low,15–68 hours,Email,Account Support,2026-09-29 06:26:41
+TKT-AE67C562,Password reset,I forgot my password and cannot access my account.,Account,Low,15–68 hours,Web Form,Account Support,2026-09-29 06:26:41
