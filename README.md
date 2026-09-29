@@ -229,6 +229,4 @@ The application provides visual and tabular analysis of the processed tickets.
 GitHub:  
 https://github.com/DhruvYadav3007
 
-## Disclaimer
 
-This project is developed as a machine-learning/software engineering project for customer-support ticket triage and routing. Predictions are model-generated and should be reviewed by human support personnel before being used for operational decisions.
