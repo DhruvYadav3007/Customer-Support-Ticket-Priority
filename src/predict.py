@@ -11,6 +11,126 @@ from scipy.sparse import hstack
 
 
 # ============================================================
+# PAGE CONFIG
+# ============================================================
+
+st.set_page_config(
+    page_title="Customer Support Ticket Prediction & Routing",
+    page_icon="🎫",
+    layout="wide"
+)
+
+
+# ============================================================
+# CUSTOM CSS
+# ============================================================
+
+st.markdown(
+    """
+    <style>
+
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 3rem;
+        max-width: 1400px;
+    }
+
+    .main-title {
+        font-size: 2.4rem;
+        font-weight: 700;
+        margin-bottom: 0.2rem;
+    }
+
+    .main-subtitle {
+        color: #6b7280;
+        font-size: 1rem;
+        margin-bottom: 1.8rem;
+    }
+
+    .result-card {
+        padding: 1.2rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        background: #ffffff;
+        color: #111827 !important;
+        min-height: 110px;
+    }
+
+    .result-card .result-label {
+        color: #6b7280 !important;
+        font-size: 0.85rem;
+        margin-bottom: 0.35rem;
+    }
+
+    .result-card .result-value {
+        color: #111827 !important;
+        font-size: 1.4rem;
+        font-weight: 700;
+    }
+
+    .result-card .priority-critical {
+        color: #b91c1c !important;
+    }
+
+    .result-card .priority-high {
+        color: #c2410c !important;
+    }
+
+    .result-card .priority-medium {
+        color: #a16207 !important;
+    }
+
+    .result-card .priority-low {
+        color: #15803d !important;
+    }
+
+    .section-title {
+        font-size: 1.45rem;
+        font-weight: 650;
+        margin-top: 0.5rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .section-subtitle {
+        color: #6b7280;
+        margin-bottom: 1rem;
+    }
+
+    .priority-critical {
+        color: #b91c1c;
+        font-weight: 700;
+    }
+
+    .priority-high {
+        color: #c2410c;
+        font-weight: 700;
+    }
+
+    .priority-medium {
+        color: #a16207;
+        font-weight: 700;
+    }
+
+    .priority-low {
+        color: #15803d;
+        font-weight: 700;
+    }
+
+    #MainMenu {
+        visibility: hidden;
+    }
+
+    footer {
+        visibility: hidden;
+    }
+
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+# ============================================================
 # PATHS
 # ============================================================
 
@@ -246,7 +366,7 @@ def get_number_to_label(label_mapping):
 
 
 # ============================================================
-# PREDICT SINGLE TICKET
+# SINGLE TICKET PREDICTION
 # ============================================================
 
 def predict_ticket(
@@ -370,7 +490,6 @@ def predict_ticket(
         "label": label,
 
         "proba": probabilities
-
     }
 
 
@@ -388,30 +507,21 @@ def get_resolution_range(
         return None
 
     required = [
-
         "Priority_Level",
-
         "Issue_Category",
-
         "Resolution_Time_Hours"
-
     ]
 
     if not all(
         column in df.columns
         for column in required
     ):
-
         return None
 
     subset = df[
-
         (df["Priority_Level"] == priority)
-
         &
-
         (df["Issue_Category"] == category)
-
     ][
         "Resolution_Time_Hours"
     ].dropna()
@@ -442,11 +552,8 @@ def get_resolution_range(
     )
 
     return (
-
         round(lower, 1),
-
         round(upper, 1)
-
     )
 
 
@@ -515,7 +622,7 @@ def get_department_filename(
 
 
 # ============================================================
-# ROUTE SINGLE TICKET
+# ROUTE TICKET
 # ============================================================
 
 def route_ticket(
@@ -605,40 +712,28 @@ def route_ticket(
     if os.path.exists(filepath):
 
         ticket.to_csv(
-
             filepath,
-
             mode="a",
-
             header=False,
-
             index=False
-
         )
 
     else:
 
         ticket.to_csv(
-
             filepath,
-
             index=False
-
         )
 
     return (
-
         ticket_id,
-
         department,
-
         filepath
-
     )
 
 
 # ============================================================
-# LOAD CURRENT DEPARTMENT QUEUES
+# LOAD DEPARTMENT QUEUES
 # ============================================================
 
 def load_department_tickets(
@@ -724,10 +819,6 @@ def process_batch(
 
     df = df.copy()
 
-    # --------------------------------------------------------
-    # Required/default columns
-    # --------------------------------------------------------
-
     if (
         "Ticket_Description"
         not in df.columns
@@ -763,10 +854,6 @@ def process_batch(
             "Web Form"
         )
 
-    # --------------------------------------------------------
-    # Prepare data
-    # --------------------------------------------------------
-
     prediction_df = pd.DataFrame({
 
         "Ticket_Subject":
@@ -796,10 +883,6 @@ def process_batch(
             .astype(str)
 
     })
-
-    # --------------------------------------------------------
-    # Feature generation
-    # --------------------------------------------------------
 
     subject_vectors = (
         artifacts[
@@ -859,10 +942,6 @@ def process_batch(
 
     ]).tocsr()
 
-    # --------------------------------------------------------
-    # Prediction
-    # --------------------------------------------------------
-
     predictions = (
         artifacts["model"]
         .predict(X)
@@ -890,10 +969,6 @@ def process_batch(
         "predicted_priority"
     ] = predicted_labels
 
-    # --------------------------------------------------------
-    # Department routing
-    # --------------------------------------------------------
-
     df[
         "routed_department"
     ] = [
@@ -908,10 +983,6 @@ def process_batch(
         ]
 
     ]
-
-    # --------------------------------------------------------
-    # Resolution ranges
-    # --------------------------------------------------------
 
     resolution_ranges = []
 
@@ -956,10 +1027,6 @@ def process_batch(
         "expected_resolution_range"
     ] = resolution_ranges
 
-    # --------------------------------------------------------
-    # Route every ticket
-    # --------------------------------------------------------
-
     ticket_ids = []
 
     for _, row in df.iterrows():
@@ -980,16 +1047,12 @@ def process_batch(
             try:
 
                 parts = (
-
                     resolution_text
-
                     .replace(
                         " hours",
                         ""
                     )
-
                     .split("–")
-
                 )
 
                 resolution_range = (
@@ -1068,26 +1131,84 @@ def artifacts_are_ready(
     ]
 
     return all(
-        artifacts.get(name) is not None
+        artifacts.get(name)
+        is not None
         for name in required
     )
 
 
 # ============================================================
-# BATCH PROCESSING + ANALYSIS DISPLAY
+# PRIORITY CSS CLASS
+# ============================================================
+
+def priority_class(
+    priority
+):
+
+    value = str(
+        priority
+    ).lower()
+
+    if value == "critical":
+        return "priority-critical"
+
+    if value == "high":
+        return "priority-high"
+
+    if value == "medium":
+        return "priority-medium"
+
+    return "priority-low"
+
+
+# ============================================================
+# RESULT CARD
+# ============================================================
+
+def result_card(
+    label,
+    value,
+    css_class=""
+):
+
+    st.markdown(
+        f"""
+        <div class="result-card">
+            <div class="result-label">
+                {label}
+            </div>
+            <div class="result-value {css_class}">
+                {value}
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+# ============================================================
+# BATCH ANALYTICS
 # ============================================================
 
 def display_batch_analysis(
-    batch_result
+    batch_result,
+    key_suffix="main"
 ):
 
-    # --------------------------------------------------------
-    # Batch Analysis
-    # --------------------------------------------------------
+    if batch_result is None:
+        return
 
-    st.subheader(
-        "Batch Analysis"
+    st.markdown(
+        "## Batch Analytics"
     )
+
+    st.caption(
+        "Overview of predictions, routing and resolution estimates."
+    )
+
+    # --------------------------------------------------------
+    # KPI CARDS
+    # --------------------------------------------------------
 
     total_tickets = len(
         batch_result
@@ -1100,18 +1221,25 @@ def display_batch_analysis(
     )
 
     critical_count = int(
-
         (
             batch_result[
                 "predicted_priority"
             ]
             == "Critical"
         ).sum()
-
     )
 
-    col1, col2, col3 = (
-        st.columns(3)
+    high_count = int(
+        (
+            batch_result[
+                "predicted_priority"
+            ]
+            == "High"
+        ).sum()
+    )
+
+    col1, col2, col3, col4 = (
+        st.columns(4)
     )
 
     with col1:
@@ -1135,23 +1263,37 @@ def display_batch_analysis(
             critical_count
         )
 
+    with col4:
+
+        st.metric(
+            "High Priority",
+            high_count
+        )
+
+    st.divider()
+
     # --------------------------------------------------------
-    # Priority Distribution
+    # CHARTS
     # --------------------------------------------------------
 
-    st.write(
-        "### Priority Distribution"
+    chart_col1, chart_col2 = (
+        st.columns(2)
     )
 
-    priority_counts = (
-        batch_result[
-            "predicted_priority"
-        ]
-        .value_counts()
-    )
+    with chart_col1:
 
-    priority_analysis = (
-        pd.DataFrame({
+        st.subheader(
+            "Priority Distribution"
+        )
+
+        priority_counts = (
+            batch_result[
+                "predicted_priority"
+            ]
+            .value_counts()
+        )
+
+        priority_analysis = pd.DataFrame({
 
             "Priority":
                 priority_counts.index,
@@ -1160,31 +1302,27 @@ def display_batch_analysis(
                 priority_counts.values
 
         })
-    )
 
-    st.bar_chart(
-        priority_analysis.set_index(
-            "Priority"
+        st.bar_chart(
+            priority_analysis.set_index(
+                "Priority"
+            )
         )
-    )
 
-    # --------------------------------------------------------
-    # Department Distribution
-    # --------------------------------------------------------
+    with chart_col2:
 
-    st.write(
-        "### Department Distribution"
-    )
+        st.subheader(
+            "Department Distribution"
+        )
 
-    department_counts = (
-        batch_result[
-            "routed_department"
-        ]
-        .value_counts()
-    )
+        department_counts = (
+            batch_result[
+                "routed_department"
+            ]
+            .value_counts()
+        )
 
-    department_analysis = (
-        pd.DataFrame({
+        department_analysis = pd.DataFrame({
 
             "Department":
                 department_counts.index,
@@ -1193,20 +1331,19 @@ def display_batch_analysis(
                 department_counts.values
 
         })
-    )
 
-    st.bar_chart(
-        department_analysis.set_index(
-            "Department"
+        st.bar_chart(
+            department_analysis.set_index(
+                "Department"
+            )
         )
-    )
 
     # --------------------------------------------------------
-    # Priority by Department
+    # PRIORITY BY DEPARTMENT
     # --------------------------------------------------------
 
-    st.write(
-        "### Priority by Department"
+    st.subheader(
+        "Priority by Department"
     )
 
     priority_department = pd.crosstab(
@@ -1223,11 +1360,11 @@ def display_batch_analysis(
 
     st.dataframe(
         priority_department,
-        use_container_width=True
+        width="stretch"
     )
 
     # --------------------------------------------------------
-    # Batch Results
+    # RESULTS
     # --------------------------------------------------------
 
     st.subheader(
@@ -1270,14 +1407,14 @@ def display_batch_analysis(
             available_columns
         ],
 
-        use_container_width=True,
+        width="stretch",
 
         hide_index=True
 
     )
 
     # --------------------------------------------------------
-    # Download
+    # DOWNLOAD
     # --------------------------------------------------------
 
     csv_output = (
@@ -1298,14 +1435,13 @@ def display_batch_analysis(
 
         data=csv_output,
 
-        file_name=
-            "predictions.csv",
+        file_name="predictions.csv",
 
-        mime=
-            "text/csv",
+        mime="text/csv",
 
-        key=
-            "download_predictions"
+        width="stretch",
+
+        key=f"download_predictions_{key_suffix}"
 
     )
 
@@ -1316,26 +1452,7 @@ def display_batch_analysis(
 
 def main():
 
-    st.set_page_config(
-
-        page_title=
-            "Customer Support "
-            "Ticket Prediction & Routing",
-
-        layout="wide"
-
-    )
-
-    st.title(
-        "Customer Support "
-        "Ticket Prediction & Routing System"
-    )
-
     paths = get_paths()
-
-    # --------------------------------------------------------
-    # Create department directory
-    # --------------------------------------------------------
 
     os.makedirs(
         paths["departments"],
@@ -1343,7 +1460,7 @@ def main():
     )
 
     # --------------------------------------------------------
-    # Session state
+    # SESSION STATE
     # --------------------------------------------------------
 
     if (
@@ -1361,14 +1478,21 @@ def main():
         st.session_state.batch_result = None
 
     if (
-        "processed_batch_key"
+        "batch_source"
         not in st.session_state
     ):
 
-        st.session_state.processed_batch_key = None
+        st.session_state.batch_source = None
+
+    if (
+        "batch_input_df"
+        not in st.session_state
+    ):
+
+        st.session_state.batch_input_df = None
 
     # --------------------------------------------------------
-    # Load model
+    # LOAD MODELS
     # --------------------------------------------------------
 
     artifacts = load_artifacts(
@@ -1402,612 +1526,521 @@ def main():
         for name
         in required_artifacts
 
-        if artifacts.get(name) is None
+        if artifacts.get(name)
+        is None
 
     ]
+
+    # ========================================================
+    # HEADER
+    # ========================================================
+
+    st.markdown(
+        '<div class="main-title">'
+        'Customer Support Intelligence'
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        '<div class="main-subtitle">'
+        'Predict ticket priority, estimate resolution time, '
+        'and route tickets to the appropriate department.'
+        '</div>',
+        unsafe_allow_html=True
+    )
 
     if missing_artifacts:
 
         st.warning(
-
             "Missing model files: "
-
             +
-
             ", ".join(
                 missing_artifacts
             )
-
         )
+
+    # ========================================================
+    # MAIN TABS
+    # ========================================================
+
+    predict_tab, batch_tab, analytics_tab, queue_tab = (
+        st.tabs(
+            [
+                "🎫 Predict Ticket",
+                "📂 Batch Processing",
+                "📊 Analytics",
+                "🗂 Department Queues"
+            ]
+        )
+    )
 
     # ========================================================
     # SINGLE TICKET
     # ========================================================
 
-    st.header(
-        "Single Ticket Prediction"
-    )
+    with predict_tab:
 
-    subject = st.text_input(
-        "Ticket Subject"
-    )
+        st.markdown(
+            "## Analyze a New Ticket"
+        )
 
-    description = st.text_area(
+        st.caption(
+            "Enter ticket information to predict priority and routing."
+        )
 
-        "Ticket Description",
+        left_col, right_col = (
+            st.columns(
+                [1.2, 1]
+            )
+        )
 
-        height=160
+        with left_col:
 
-    )
-
-    category = st.selectbox(
-
-        "Issue Category",
-
-        [
-
-            "Account",
-
-            "Billing",
-
-            "Fraud",
-
-            "General Inquiry",
-
-            "Technical"
-
-        ]
-
-    )
-
-    channel = st.selectbox(
-
-        "Ticket Channel",
-
-        [
-
-            "Chat",
-
-            "Email",
-
-            "Web Form"
-
-        ]
-
-    )
-
-    if st.button(
-        "Analyze Ticket"
-    ):
-
-        if not description.strip():
-
-            st.error(
-                "Please enter a "
-                "ticket description."
+            subject = st.text_input(
+                "Ticket Subject",
+                placeholder=(
+                    "Example: Unable to access my account"
+                )
             )
 
-        elif missing_artifacts:
-
-            st.error(
-                "Required model files "
-                "are missing."
+            description = st.text_area(
+                "Ticket Description",
+                height=180,
+                placeholder=(
+                    "Describe the customer's issue..."
+                )
             )
 
-        else:
+            col1, col2 = st.columns(2)
 
-            result = predict_ticket(
+            with col1:
 
-                subject,
+                category = st.selectbox(
 
-                description,
+                    "Issue Category",
 
-                category,
+                    [
+                        "Account",
+                        "Billing",
+                        "Fraud",
+                        "General Inquiry",
+                        "Technical"
+                    ]
 
-                channel,
-
-                artifacts
-
-            )
-
-            if result:
-
-                priority = (
-                    result["label"]
                 )
 
-                resolution_range = (
-                    get_resolution_range(
+            with col2:
 
-                        priority,
+                channel = st.selectbox(
 
-                        category,
+                    "Ticket Channel",
 
-                        ticket_df
+                    [
+                        "Chat",
+                        "Email",
+                        "Web Form"
+                    ]
 
+                )
+
+            analyze = st.button(
+
+                "Analyze Ticket",
+
+                type="primary",
+
+                width="stretch"
+
+            )
+
+            if analyze:
+
+                if not description.strip():
+
+                    st.error(
+                        "Please enter a ticket description."
                     )
-                )
 
-                st.session_state.analysis = {
+                elif missing_artifacts:
 
-                    "subject":
+                    st.error(
+                        "Required model files are missing."
+                    )
+
+                else:
+
+                    result = predict_ticket(
+
                         subject,
 
-                    "description":
                         description,
 
-                    "category":
                         category,
 
-                    "channel":
                         channel,
 
-                    "priority":
-                        priority,
+                        artifacts
 
-                    "resolution_range":
-                        resolution_range,
+                    )
 
-                    "proba":
-                        result["proba"]
+                    if result:
 
-                }
+                        priority = (
+                            result["label"]
+                        )
 
-    # ========================================================
-    # SINGLE TICKET RESULT
-    # ========================================================
+                        resolution_range = (
+                            get_resolution_range(
 
-    if (
-        st.session_state.analysis
-        is not None
-    ):
+                                priority,
 
-        analysis = (
-            st.session_state.analysis
-        )
+                                category,
 
-        st.subheader(
-            "AI Analysis"
-        )
+                                ticket_df
 
-        col1, col2 = (
-            st.columns(2)
-        )
+                            )
+                        )
 
-        with col1:
+                        st.session_state.analysis = {
 
-            st.metric(
+                            "subject":
+                                subject,
 
-                "Predicted Priority",
+                            "description":
+                                description,
 
-                analysis[
-                    "priority"
-                ]
+                            "category":
+                                category,
 
+                            "channel":
+                                channel,
+
+                            "priority":
+                                priority,
+
+                            "resolution_range":
+                                resolution_range,
+
+                            "proba":
+                                result["proba"]
+
+                        }
+
+        with right_col:
+
+            analysis = (
+                st.session_state.analysis
             )
 
-        with col2:
+            if analysis is None:
 
-            resolution = (
-                analysis[
-                    "resolution_range"
-                ]
-            )
-
-            if resolution:
-
-                lower, upper = resolution
-
-                st.metric(
-
-                    "Expected Resolution",
-
-                    f"{lower:g}–"
-                    f"{upper:g} hours"
-
+                st.info(
+                    "Prediction results will appear here "
+                    "after you analyze a ticket."
                 )
 
             else:
 
-                st.metric(
-
-                    "Expected Resolution",
-
-                    "Unavailable"
-
+                st.markdown(
+                    "## Prediction Result"
                 )
 
-        # ----------------------------------------------------
-        # Confidence
-        # ----------------------------------------------------
+                priority = analysis[
+                    "priority"
+                ]
 
-        probabilities = (
-            analysis["proba"]
-        )
+                resolution = analysis[
+                    "resolution_range"
+                ]
 
-        if probabilities is not None:
+                if resolution:
 
-            st.subheader(
-                "Priority Confidence"
-            )
-
-            number_to_label = (
-                get_number_to_label(
-                    artifacts["labels"]
-                )
-            )
-
-            confidence_df = pd.DataFrame({
-
-                "Priority": [
-
-                    number_to_label.get(
-
-                        int(i),
-
-                        str(i)
-
+                    lower, upper = (
+                        resolution
                     )
 
-                    for i
-                    in range(
-                        len(
-                            probabilities
+                    resolution_text = (
+                        f"{lower:g}–"
+                        f"{upper:g} hours"
+                    )
+
+                else:
+
+                    resolution_text = (
+                        "Unavailable"
+                    )
+
+                result_col1, result_col2 = (
+                    st.columns(2)
+                )
+
+                with result_col1:
+
+                    result_card(
+                        "Predicted Priority",
+                        priority,
+                        priority_class(
+                            priority
                         )
                     )
 
-                ],
+                with result_col2:
 
-                "Confidence (%)":
+                    result_card(
+                        "Expected Resolution",
+                        resolution_text
+                    )
 
-                    np.round(
+                st.markdown(
+                    "### Ticket Routing"
+                )
 
-                        probabilities
-                        * 100,
+                department = get_department(
+                    analysis["category"]
+                )
 
-                        2
+                result_card(
+                    "Selected Department",
+                    department
+                )
+
+                probabilities = (
+                    analysis["proba"]
+                )
+
+                if probabilities is not None:
+
+                    st.markdown(
+                        "### Priority Confidence"
+                    )
+
+                    number_to_label = (
+                        get_number_to_label(
+                            artifacts["labels"]
+                        )
+                    )
+
+                    confidence_df = pd.DataFrame({
+
+                        "Priority": [
+
+                            number_to_label.get(
+                                int(i),
+                                str(i)
+                            )
+
+                            for i
+                            in range(
+                                len(
+                                    probabilities
+                                )
+                            )
+
+                        ],
+
+                        "Confidence (%)":
+
+                            np.round(
+
+                                probabilities
+                                * 100,
+
+                                2
+
+                            )
+
+                    })
+
+                    st.dataframe(
+
+                        confidence_df,
+
+                        width="stretch",
+
+                        hide_index=True
 
                     )
 
-            })
+                if st.button(
 
-            st.dataframe(
+                    "Route Ticket",
 
-                confidence_df,
+                    type="primary",
 
-                use_container_width=True,
+                    width="stretch",
 
-                hide_index=True
+                    key="route_single_ticket"
 
+                ):
+
+                    ticket_id, department, filepath = (
+                        route_ticket(
+
+                            analysis[
+                                "subject"
+                            ],
+
+                            analysis[
+                                "description"
+                            ],
+
+                            analysis[
+                                "category"
+                            ],
+
+                            analysis[
+                                "priority"
+                            ],
+
+                            analysis[
+                                "channel"
+                            ],
+
+                            analysis[
+                                "resolution_range"
+                            ],
+
+                            paths[
+                                "departments"
+                            ]
+
+                        )
+                    )
+
+                    st.success(
+
+                        f"Ticket {ticket_id} "
+                        f"routed to {department}"
+
+                    )
+
+                    st.caption(
+
+                        "Saved to: "
+                        +
+                        os.path.basename(
+                            filepath
+                        )
+
+                    )
+
+                    st.session_state.analysis = None
+
+                    st.rerun()
+
+    # ========================================================
+    # BATCH PROCESSING
+    # ========================================================
+
+    with batch_tab:
+        st.markdown("## Batch Ticket Processing")
+        st.caption("Upload a CSV or use the included sample dataset.")
+
+        upload_col, sample_col = st.columns(2)
+
+        with upload_col:
+            uploaded = st.file_uploader(
+                "Upload CSV", type=["csv"], key="batch_upload"
             )
+            if uploaded is not None:
+                try:
+                    st.session_state.batch_input_df = pd.read_csv(uploaded)
+                    st.session_state.batch_source = uploaded.name
+                except Exception as e:
+                    st.error("Could not read the uploaded CSV.")
+                    st.exception(e)
 
-        # ----------------------------------------------------
-        # Routing
-        # ----------------------------------------------------
-
-        st.subheader(
-            "Ticket Routing"
-        )
-
-        recommended_department = (
-            get_department(
-                analysis[
-                    "category"
-                ]
+        with sample_col:
+            st.write("Use the included demonstration dataset.")
+            use_sample = st.button(
+                "Use Sample CSV", width="stretch", key="use_sample_csv"
             )
-        )
+            if use_sample:
+                if not os.path.exists(paths["sample"]):
+                    st.error(
+                        "Sample CSV not found.\n\n"
+                        f"Expected location:\n{paths['sample']}"
+                    )
+                else:
+                    try:
+                        st.session_state.batch_input_df = pd.read_csv(paths["sample"])
+                        st.session_state.batch_source = "Included Sample CSV"
+                    except Exception as e:
+                        st.error("Could not read the sample CSV.")
+                        st.exception(e)
 
-        st.write(
+        batch_df = st.session_state.get("batch_input_df")
+        batch_source = st.session_state.get("batch_source")
 
-            "Recommended Department: "
-
-            f"**{recommended_department}**"
-
-        )
-
-        if st.button(
-
-            "Route Ticket",
-
-            key=
-                "route_single_ticket"
-
-        ):
-
-            ticket_id, department, filepath = (
-
-                route_ticket(
-
-                    analysis[
-                        "subject"
-                    ],
-
-                    analysis[
-                        "description"
-                    ],
-
-                    analysis[
-                        "category"
-                    ],
-
-                    analysis[
-                        "priority"
-                    ],
-
-                    analysis[
-                        "channel"
-                    ],
-
-                    analysis[
-                        "resolution_range"
-                    ],
-
-                    paths[
-                        "departments"
-                    ]
-
-                )
-
-            )
-
-            st.success(
-
-                f"Ticket {ticket_id} "
-                f"routed to {department}"
-
-            )
-
+        if batch_df is not None:
+            st.markdown("### Input Preview")
             st.caption(
-
-                "Saved to: "
-
-                +
-
-                os.path.basename(
-                    filepath
-                )
-
+                f"{len(batch_df)} ticket(s) loaded from {batch_source}."
             )
+            st.dataframe(batch_df.head(10), width="stretch", hide_index=True)
 
-            st.rerun()
+            if "Ticket_Description" not in batch_df.columns:
+                st.error("CSV must contain `Ticket_Description`.")
+            elif missing_artifacts:
+                st.error("Required model files are missing.")
+            else:
+                process_clicked = st.button(
+                    "Process Tickets",
+                    type="primary",
+                    width="stretch",
+                    key="process_batch"
+                )
+                if process_clicked:
+                    try:
+                        with st.spinner("Processing tickets..."):
+                            batch_result = process_batch(
+                                batch_df.copy(),
+                                artifacts,
+                                ticket_df,
+                                paths["departments"]
+                            )
+
+                        st.session_state.batch_result = batch_result
+                        st.session_state.batch_source = batch_source
+                        st.success(
+                            f"{len(batch_result)} ticket(s) processed and routed "
+                            f"from {batch_source}."
+                        )
+                        st.rerun()
+                    except Exception as e:
+                        st.error("Batch processing failed.")
+                        st.exception(e)
+
+        if st.session_state.batch_result is not None:
+            st.divider()
+            st.markdown("## Latest Batch Results")
+            if st.session_state.batch_source:
+                st.caption(
+                    "Source: " + str(st.session_state.batch_source)
+                )
+            display_batch_analysis(
+                st.session_state.batch_result,
+                key_suffix="batch_results"
+            )
 
     # ========================================================
-    # BATCH PREDICTION
+    # ANALYTICS TAB
     # ========================================================
 
-    st.header(
-        "Batch Prediction"
-    )
+    with analytics_tab:
 
-    st.write(
-        "Process multiple support tickets "
-        "from a CSV file."
-    )
-
-    # --------------------------------------------------------
-    # Upload / Sample buttons
-    # --------------------------------------------------------
-
-    upload_col, sample_col = (
-        st.columns(2)
-    )
-
-    with upload_col:
-
-        uploaded = st.file_uploader(
-
-            "Upload CSV",
-
-            type=["csv"],
-
-            key="batch_upload"
-
-        )
-
-    with sample_col:
-
-        st.write(
-            "Use the included demonstration dataset"
-        )
-
-        use_sample = st.button(
-
-            "Use Sample CSV",
-
-            use_container_width=True,
-
-            key="use_sample_csv"
-
-        )
-
-    # --------------------------------------------------------
-    # Determine batch source
-    # --------------------------------------------------------
-
-    batch_df = None
-
-    batch_key = None
-
-    batch_source = None
-
-    # --------------------------------------------------------
-    # Sample CSV
-    # --------------------------------------------------------
-
-    if use_sample:
-
-        if not os.path.exists(
-            paths["sample"]
+        if (
+            st.session_state.batch_result
+            is None
         ):
 
-            st.error(
-
-                "Sample CSV not found.\n\n"
-
-                f"Expected location:\n"
-                f"{paths['sample']}"
-
+            st.info(
+                "Process a CSV in the Batch Processing tab "
+                "to view analytics."
             )
 
         else:
-
-            try:
-
-                batch_df = pd.read_csv(
-                    paths["sample"]
-                )
-
-                batch_key = (
-                    "SAMPLE_CSV",
-                    os.path.getmtime(
-                        paths["sample"]
-                    )
-                )
-
-                batch_source = (
-                    "Included Sample CSV"
-                )
-
-            except Exception as e:
-
-                st.error(
-                    "Could not read "
-                    "the sample CSV."
-                )
-
-                st.exception(e)
-
-    # --------------------------------------------------------
-    # Uploaded CSV
-    # --------------------------------------------------------
-
-    elif uploaded is not None:
-
-        batch_key = (
-
-            uploaded.name,
-
-            uploaded.size
-
-        )
-
-        batch_source = (
-            uploaded.name
-        )
-
-        if (
-            st.session_state
-            .processed_batch_key
-            != batch_key
-        ):
-
-            try:
-
-                batch_df = pd.read_csv(
-                    uploaded
-                )
-
-            except Exception as e:
-
-                st.error(
-                    "Could not read "
-                    "the uploaded CSV."
-                )
-
-                st.exception(e)
-
-        else:
-
-            batch_df = None
-
-    # --------------------------------------------------------
-    # Process batch
-    # --------------------------------------------------------
-
-    if batch_df is not None:
-
-        if (
-            "Ticket_Description"
-            not in batch_df.columns
-        ):
-
-            st.error(
-
-                "CSV must contain "
-                "`Ticket_Description`."
-
-            )
-
-        elif missing_artifacts:
-
-            st.error(
-
-                "Required model "
-                "files are missing."
-
-            )
-
-        else:
-
-            try:
-
-                batch_result = process_batch(
-
-                    batch_df,
-
-                    artifacts,
-
-                    ticket_df,
-
-                    paths[
-                        "departments"
-                    ]
-
-                )
-
-                st.session_state.batch_result = (
-                    batch_result
-                )
-
-                st.session_state.processed_batch_key = (
-                    batch_key
-                )
-
-                st.success(
-
-                    f"{len(batch_result)} "
-                    f"ticket(s) processed and routed "
-                    f"from {batch_source}."
-
-                )
-
-            except Exception as e:
-
-                st.error(
-                    "Batch processing failed."
-                )
-
-                st.exception(e)
-
-    # --------------------------------------------------------
-    # Show batch analysis
-    # --------------------------------------------------------
-
-    if (
-        st.session_state.batch_result
-        is not None
-    ):
-
-        current_key = (
-            st.session_state
-            .processed_batch_key
-        )
-
-        if (
-            batch_key is None
-            or
-            current_key == batch_key
-        ):
 
             display_batch_analysis(
 
@@ -2016,144 +2049,150 @@ def main():
             )
 
     # ========================================================
-    # CURRENT DEPARTMENT TICKETS
+    # DEPARTMENT QUEUES
     # ========================================================
 
-    st.header(
-        "Current Department Tickets"
-    )
+    with queue_tab:
 
-    department_data = (
-        load_department_tickets(
-
-            paths[
-                "departments"
-            ]
-
-        )
-    )
-
-    # --------------------------------------------------------
-    # Department summary cards
-    # --------------------------------------------------------
-
-    summary_cols = st.columns(5)
-
-    for column, (
-        department,
-        department_df
-    ) in zip(
-
-        summary_cols,
-
-        department_data.items()
-
-    ):
-
-        with column:
-
-            st.metric(
-
-                department,
-
-                len(
-                    department_df
-                )
-
-            )
-
-    # --------------------------------------------------------
-    # Department queues
-    # --------------------------------------------------------
-
-    tabs = st.tabs(
-
-        list(
-            department_data.keys()
+        st.markdown(
+            "## Department Queues"
         )
 
-    )
+        st.caption(
+            "Tickets currently routed to each support department."
+        )
 
-    for tab, (
-        department,
-        department_df
-    ) in zip(
+        department_data = (
+            load_department_tickets(
+                paths[
+                    "departments"
+                ]
+            )
+        )
 
-        tabs,
+        # ----------------------------------------------------
+        # SUMMARY
+        # ----------------------------------------------------
 
-        department_data.items()
+        summary_cols = st.columns(5)
 
-    ):
+        for column, (
+            department,
+            department_df
+        ) in zip(
 
-        with tab:
+            summary_cols,
 
-            st.subheader(
+            department_data.items()
 
-                f"{department} Queue"
+        ):
 
+            with column:
+
+                st.metric(
+
+                    department,
+
+                    len(
+                        department_df
+                    )
+
+                )
+
+        st.divider()
+
+        # ----------------------------------------------------
+        # QUEUE TABS
+        # ----------------------------------------------------
+
+        tabs = st.tabs(
+
+            list(
+                department_data.keys()
             )
 
-            if department_df.empty:
+        )
 
-                st.info(
+        for tab, (
+            department,
+            department_df
+        ) in zip(
 
-                    "No tickets currently "
-                    "routed to this department."
+            tabs,
 
-                )
+            department_data.items()
 
-            else:
+        ):
 
-                st.write(
+            with tab:
 
-                    f"**{len(department_df)} "
-                    "current ticket(s)**"
+                st.subheader(
 
-                )
-
-                display_columns = [
-
-                    "Queue No.",
-
-                    "Ticket_ID",
-
-                    "Ticket_Subject",
-
-                    "Issue_Category",
-
-                    "Priority",
-
-                    "Expected_Resolution",
-
-                    "Ticket_Channel",
-
-                    "Routed_At"
-
-                ]
-
-                available_columns = [
-
-                    column
-
-                    for column
-                    in display_columns
-
-                    if column
-                    in department_df.columns
-
-                ]
-
-                st.dataframe(
-
-                    department_df[
-                        available_columns
-                    ],
-
-                    use_container_width=True,
-
-                    hide_index=True
+                    f"{department} Queue"
 
                 )
+
+                if department_df.empty:
+
+                    st.info(
+
+                        "No tickets currently routed "
+                        "to this department."
+
+                    )
+
+                else:
+
+                    st.write(
+
+                        f"**{len(department_df)} "
+                        "current ticket(s)**"
+
+                    )
+
+                    display_columns = [
+
+                        "Queue No.",
+
+                        "Ticket_ID",
+
+                        "Ticket_Subject",
+
+                        "Issue_Category",
+
+                        "Priority",
+
+                        "Expected_Resolution",
+
+                        "Ticket_Channel",
+
+                        "Routed_At"
+
+                    ]
+
+                    available_columns = [
+
+                        column
+
+                        for column
+                        in display_columns
+
+                        if column
+                        in department_df.columns
+
+                    ]
+
+                    st.dataframe(
+
+                        department_df[
+                            available_columns
+                        ],
+
+                        width="stretch",
+
+                        hide_index=True
+
+                    )
 
 
 # ============================================================
